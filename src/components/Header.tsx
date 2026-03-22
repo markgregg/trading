@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useTheme } from 'signal'
+import { Box, Button, ButtonGroup, Stack, useTheme } from 'signal'
 import { SunIcon, MoonIcon } from 'lucide-react'
 
 export function Header() {
@@ -14,68 +14,77 @@ export function Header() {
   }, [])
 
   return (
-    <header className="trading-header">
+    <Box component="header" className="trading-header">
       {/* Logo */}
-      <div className="trading-header-logo">
+      <Stack direction="row" alignItems="center" spacing={1} className="trading-header-logo">
         <div className="trading-header-logo-mark">FX</div>
         <span>Signal FX</span>
-      </div>
+      </Stack>
 
-      <div className="trading-header-vsep" />
+      <Box className="trading-header-vsep" />
 
       {/* Market status */}
-      <div className="trading-header-market-status">
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing="0.375rem"
+        className="trading-header-market-status"
+      >
         <div className="trading-header-market-status-dot" />
         <span>Markets Open</span>
-      </div>
+      </Stack>
 
       <div className="trading-header-clock">{time} UTC</div>
 
-      <div className="trading-header-spacer" />
+      <Box className="trading-header-spacer" />
 
-      <div className="trading-header-controls">
+      <Stack direction="row" alignItems="center" spacing={1} className="trading-header-controls">
         {/* Density segmented control */}
         <span className="trading-header-controls-label">Density</span>
-        <div className="seg-control" role="group" aria-label="Select density">
-          <button
-            className="seg-btn"
-            data-active={density === 'high' ? 'true' : undefined}
+        <ButtonGroup aria-label="Select density">
+          <Button
+            variant={density === 'high' ? 'default' : 'outline'}
+            size="sm"
+            aria-pressed={density === 'high'}
             onClick={() => setDensity('high')}
           >
             High
-          </button>
-          <button
-            className="seg-btn"
-            data-active={density === 'super-high' ? 'true' : undefined}
+          </Button>
+          <Button
+            variant={density === 'super-high' ? 'default' : 'outline'}
+            size="sm"
+            aria-pressed={density === 'super-high'}
             onClick={() => setDensity('super-high')}
           >
             Super High
-          </button>
-        </div>
+          </Button>
+        </ButtonGroup>
 
-        <div className="trading-header-vsep" />
+        <Box className="trading-header-vsep" />
 
         {/* Theme segmented control */}
         <span className="trading-header-controls-label">Theme</span>
-        <div className="seg-control" role="group" aria-label="Select theme">
-          <button
-            className="seg-btn"
-            data-active={theme === 'light' ? 'true' : undefined}
+        <ButtonGroup aria-label="Select theme">
+          <Button
+            variant={theme === 'light' ? 'default' : 'outline'}
+            size="sm"
+            aria-pressed={theme === 'light'}
             onClick={() => setTheme('light')}
           >
             <SunIcon size={11} />
             Light
-          </button>
-          <button
-            className="seg-btn"
-            data-active={theme === 'dark' ? 'true' : undefined}
+          </Button>
+          <Button
+            variant={theme === 'dark' ? 'default' : 'outline'}
+            size="sm"
+            aria-pressed={theme === 'dark'}
             onClick={() => setTheme('dark')}
           >
             <MoonIcon size={11} />
             Dark
-          </button>
-        </div>
-      </div>
-    </header>
+          </Button>
+        </ButtonGroup>
+      </Stack>
+    </Box>
   )
 }

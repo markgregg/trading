@@ -1,11 +1,13 @@
 import * as React from 'react'
 import {
+  Box,
   Button,
   ButtonGroup,
   Card,
   CardHeader,
   CardTitle,
   CardContent,
+  Grid,
   Label,
   Input,
   Select,
@@ -16,6 +18,8 @@ import {
   Switch,
   Progress,
   Separator,
+  Slider,
+  Stack,
 } from 'signal'
 
 const INSTRUMENTS = [
@@ -39,14 +43,14 @@ const TENORS = [
 export function OrderEntry() {
   const [side, setSide] = React.useState<'BUY' | 'SELL'>('BUY')
   const [quantity, setQuantity] = React.useState('1,000,000')
-  const [sliderValue, setSliderValue] = React.useState(25)
+  const [sliderValue, setSliderValue] = React.useState([25])
   const [gtc, setGtc] = React.useState(false)
   const [limitOrder, setLimitOrder] = React.useState(false)
   const [riskPct] = React.useState(62)
 
-  const handleQuantitySlider = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseInt(e.target.value)
-    setSliderValue(val)
+  const handleQuantitySlider = (value: number[]) => {
+    const val = value[0] ?? 0
+    setSliderValue([val])
     const amounts = [100_000, 500_000, 1_000_000, 5_000_000, 10_000_000]
     const idx = Math.floor((val / 100) * (amounts.length - 1))
     setQuantity(amounts[Math.min(idx, amounts.length - 1)].toLocaleString())
@@ -76,9 +80,9 @@ export function OrderEntry() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="order-entry-body">
+        <Stack spacing="0.625rem" className="order-entry-body">
           {/* Instrument */}
-          <div className="order-entry-field">
+          <Stack spacing="0.3rem" className="order-entry-field">
             <Label htmlFor="oe-instrument">Instrument</Label>
             <Select defaultValue="eurusd">
               <SelectTrigger id="oe-instrument">
@@ -92,10 +96,10 @@ export function OrderEntry() {
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </Stack>
 
           {/* Tenor */}
-          <div className="order-entry-field">
+          <Stack spacing="0.3rem" className="order-entry-field">
             <Label htmlFor="oe-tenor">Tenor</Label>
             <Select defaultValue="spot">
               <SelectTrigger id="oe-tenor">
@@ -109,10 +113,10 @@ export function OrderEntry() {
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </Stack>
 
           {/* Quantity + slider */}
-          <div className="order-entry-field">
+          <Stack spacing="0.3rem" className="order-entry-field">
             <Label htmlFor="oe-qty">Notional Amount</Label>
             <Input
               id="oe-qty"
@@ -122,71 +126,77 @@ export function OrderEntry() {
             />
             <div className="order-entry-slider-row">
               <span className="order-entry-slider-label">100K</span>
-              <input
-                type="range"
+              <Slider
                 min={0}
                 max={100}
+                step={25}
                 value={sliderValue}
-                onChange={handleQuantitySlider}
-                style={{ flex: 1, accentColor: 'var(--primary)' }}
+                onValueChange={(value) => handleQuantitySlider(Array.isArray(value) ? value : [value])}
+                style={{ flex: 1 }}
                 aria-label="Adjust notional amount"
               />
               <span className="order-entry-slider-label">10M</span>
             </div>
-          </div>
+          </Stack>
 
           {/* Limit price (conditional) */}
           {limitOrder && (
-            <div className="order-entry-field">
+            <Stack spacing="0.3rem" className="order-entry-field">
               <Label htmlFor="oe-limit">Limit Price</Label>
               <Input
                 id="oe-limit"
                 placeholder="1.08642"
                 style={{ fontFamily: 'ui-monospace, monospace' }}
               />
-            </div>
+            </Stack>
           )}
 
           <Separator />
 
           {/* Switches */}
-          <div className="order-entry-switch-row">
+          <Box className="order-entry-switch-row">
             <span className="order-entry-switch-label">Good Till Cancel</span>
             <Switch
               checked={gtc}
               onCheckedChange={(v) => setGtc(!!v)}
               aria-label="Good till cancel"
             />
-          </div>
-          <div className="order-entry-switch-row">
+          </Box>
+          <Box className="order-entry-switch-row">
             <span className="order-entry-switch-label">Limit Order</span>
             <Switch
               checked={limitOrder}
               onCheckedChange={(v) => setLimitOrder(!!v)}
               aria-label="Limit order"
             />
-          </div>
+          </Box>
 
           {/* Risk utilization */}
-          <div className="order-entry-risk">
-            <div className="order-entry-risk-label">
+          <Stack spacing="0.3rem" className="order-entry-risk">
+            <Box className="order-entry-risk-label">
               <span>Risk Utilization</span>
               <span>{riskPct}%</span>
-            </div>
+            </Box>
             <Progress value={riskPct} />
-          </div>
+          </Stack>
 
           {/* Submit actions */}
-          <div className="order-entry-actions">
-            <Button
-              variant={side === 'BUY' ? 'success' : 'destructive'}
-              style={{ fontWeight: 700, letterSpacing: '0.04em' }}
-            >
-              {side} EUR/USD
-            </Button>
-            <Button variant="outline">Cancel</Button>
-          </div>
-        </div>
+          <Grid container columns={2} columnSpacing={1} className="order-entry-actions">
+            <Grid>
+              <Button
+                variant={side === 'BUY' ? 'success' : 'destructive'}
+                style={{ width: '100%', fontWeight: 700, letterSpacing: '0.04em' }}
+              >
+                {side} EUR/USD
+              </Button>
+            </Grid>
+            <Grid>
+              <Button variant="outline" style={{ width: '100%' }}>
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+        </Stack>
       </CardContent>
     </Card>
   )

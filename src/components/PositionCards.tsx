@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle, Badge } from 'signal'
+import { Badge, Box, Card, CardContent, CardHeader, CardTitle, Grid, Stack } from 'signal'
 
 interface Position {
   pair: string
@@ -48,13 +48,15 @@ const SUMMARY = [
 
 export function PositionCards() {
   return (
-    <>
+    <Stack spacing={1.5}>
       {/* Summary strip */}
-      <div className="position-cards-grid">
+      <Grid container spacing={1} className="position-cards-grid">
         {SUMMARY.map((s) => (
-          <Card key={s.label} size="sm">
-            <CardContent>
-              <div
+          <Grid key={s.label} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Card size="sm">
+              <CardContent>
+                <Stack spacing="0.25rem">
+                  <div
                 className={[
                   'position-card-value',
                   s.positive === true
@@ -63,14 +65,16 @@ export function PositionCards() {
                       ? 'text-negative'
                       : '',
                 ].join(' ')}
-              >
-                {s.value}
-              </div>
-              <div className="position-card-label">{s.label}</div>
-            </CardContent>
-          </Card>
+                  >
+                    {s.value}
+                  </div>
+                  <div className="position-card-label">{s.label}</div>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </div>
+      </Grid>
 
       {/* Open positions */}
       <Card>
@@ -78,33 +82,35 @@ export function PositionCards() {
           <CardTitle>Open Positions</CardTitle>
         </CardHeader>
         <CardContent>
-          {POSITIONS.map((pos) => (
-            <div key={pos.pair} className="position-row">
-              <span className="position-row-key" style={{ fontWeight: 600, minWidth: 80 }}>
-                {pos.pair}
-              </span>
-              <Badge
-                variant={pos.side === 'LONG' ? 'success' : 'destructive'}
-                style={{ fontSize: 'var(--ds-text-xs)' }}
-              >
-                {pos.side}
-              </Badge>
-              <span className="position-row-val" style={{ flex: 1, textAlign: 'right' }}>
-                {pos.size}
-              </span>
-              <span
-                className={[
-                  'position-row-val',
-                  pos.pnlValue >= 0 ? 'text-positive' : 'text-negative',
-                ].join(' ')}
-                style={{ minWidth: 80, textAlign: 'right' }}
-              >
-                {pos.pnl}
-              </span>
-            </div>
-          ))}
+          <Stack spacing="0.25rem">
+            {POSITIONS.map((pos) => (
+              <Box key={pos.pair} className="position-row">
+                <span className="position-row-key" style={{ fontWeight: 600, minWidth: 80 }}>
+                  {pos.pair}
+                </span>
+                <Badge
+                  variant={pos.side === 'LONG' ? 'success' : 'destructive'}
+                  style={{ fontSize: 'var(--ds-text-xs)' }}
+                >
+                  {pos.side}
+                </Badge>
+                <span className="position-row-val" style={{ flex: 1, textAlign: 'right' }}>
+                  {pos.size}
+                </span>
+                <span
+                  className={[
+                    'position-row-val',
+                    pos.pnlValue >= 0 ? 'text-positive' : 'text-negative',
+                  ].join(' ')}
+                  style={{ minWidth: 80, textAlign: 'right' }}
+                >
+                  {pos.pnl}
+                </span>
+              </Box>
+            ))}
+          </Stack>
         </CardContent>
       </Card>
-    </>
+    </Stack>
   )
 }

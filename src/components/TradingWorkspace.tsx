@@ -17,6 +17,9 @@ import {
   SelectItem,
   Label,
   Alert,
+  Box,
+  Grid,
+  Stack,
 } from 'signal'
 import { OrderEntry } from './OrderEntry'
 import { PriceChart } from './PriceChart'
@@ -33,44 +36,48 @@ function PositionsTab() {
   ]
 
   return (
-    <div className="positions-grid">
+    <Grid container spacing={1.5} className="positions-grid">
       {positions.map((pos) => (
-        <Card key={pos.pair}>
-          <CardHeader>
-            <CardTitle
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-            >
-              <span className="text-data-currency">{pos.pair}</span>
-              <Badge variant={pos.side === 'LONG' ? 'success' : 'destructive'}>
-                {pos.side}
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="position-row">
-              <span className="position-row-key">Size</span>
-              <span className="position-row-val">{pos.size}</span>
-            </div>
-            <div className="position-row">
-              <span className="position-row-key">Avg Price</span>
-              <span className="position-row-val">{pos.avg}</span>
-            </div>
-            <div className="position-row">
-              <span className="position-row-key">Current</span>
-              <span className="position-row-val">{pos.current}</span>
-            </div>
-            <div className="position-row">
-              <span className="position-row-key">Unrealised P&L</span>
-              <span
-                className={['position-row-val', pos.pnlVal >= 0 ? 'text-positive' : 'text-negative'].join(' ')}
+        <Grid key={pos.pair} size={{ xs: 12, sm: 6, lg: 4 }}>
+          <Card>
+            <CardHeader>
+              <CardTitle
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
               >
-                {pos.pnl}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+                <span className="text-data-currency">{pos.pair}</span>
+                <Badge variant={pos.side === 'LONG' ? 'success' : 'destructive'}>
+                  {pos.side}
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Stack spacing="0.25rem">
+                <Box className="position-row">
+                  <span className="position-row-key">Size</span>
+                  <span className="position-row-val">{pos.size}</span>
+                </Box>
+                <Box className="position-row">
+                  <span className="position-row-key">Avg Price</span>
+                  <span className="position-row-val">{pos.avg}</span>
+                </Box>
+                <Box className="position-row">
+                  <span className="position-row-key">Current</span>
+                  <span className="position-row-val">{pos.current}</span>
+                </Box>
+                <Box className="position-row">
+                  <span className="position-row-key">Unrealised P&L</span>
+                  <span
+                    className={['position-row-val', pos.pnlVal >= 0 ? 'text-positive' : 'text-negative'].join(' ')}
+                  >
+                    {pos.pnl}
+                  </span>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
       ))}
-    </div>
+    </Grid>
   )
 }
 
@@ -81,69 +88,76 @@ function SettingsTab() {
   const [showTooltips, setShowTooltips] = React.useState(true)
 
   return (
-    <div className="settings-grid">
-      <Card>
+    <Grid container spacing={1.5} className="settings-grid">
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Card>
         <CardHeader>
           <CardTitle>Notifications</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="settings-row">
-            <div className="settings-row-label">
+          <Box className="settings-row">
+            <Stack spacing="0.125rem" className="settings-row-label">
               <span className="settings-label-title">Sound Alerts</span>
               <span className="settings-label-desc">Play audio on order fill</span>
-            </div>
+            </Stack>
             <Switch
               checked={soundAlerts}
               onCheckedChange={(v) => setSoundAlerts(!!v)}
               aria-label="Sound alerts"
             />
-          </div>
-          <div className="settings-row">
-            <div className="settings-row-label">
+          </Box>
+          <Box className="settings-row">
+            <Stack spacing="0.125rem" className="settings-row-label">
               <span className="settings-label-title">Email Confirmations</span>
               <span className="settings-label-desc">Send email on each trade</span>
-            </div>
+            </Stack>
             <Switch
               checked={emailConfirm}
               onCheckedChange={(v) => setEmailConfirm(!!v)}
               aria-label="Email confirmations"
             />
-          </div>
-          <div className="settings-row">
-            <div className="settings-row-label">
+          </Box>
+          <Box className="settings-row">
+            <Stack spacing="0.125rem" className="settings-row-label">
               <span className="settings-label-title">Tooltips</span>
               <span className="settings-label-desc">Show contextual help</span>
-            </div>
+            </Stack>
             <Switch
               checked={showTooltips}
               onCheckedChange={(v) => setShowTooltips(!!v)}
               aria-label="Tooltips"
             />
-          </div>
+          </Box>
         </CardContent>
       </Card>
+      </Grid>
 
-      <Card>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Card>
         <CardHeader>
           <CardTitle>Risk Controls</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="settings-row">
-            <div className="settings-row-label">
+          <Box className="settings-row">
+            <Stack spacing="0.125rem" className="settings-row-label">
               <span className="settings-label-title">Auto Hedge</span>
               <span className="settings-label-desc">Hedge open positions automatically</span>
-            </div>
+            </Stack>
             <Switch
               checked={autoHedge}
               onCheckedChange={(v) => setAutoHedge(!!v)}
               aria-label="Auto hedge"
             />
-          </div>
-          <div className="settings-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.375rem' }}>
-            <div className="settings-row-label">
+          </Box>
+          <Stack
+            spacing="0.375rem"
+            className="settings-row"
+            style={{ alignItems: 'flex-start' }}
+          >
+            <Stack spacing="0.125rem" className="settings-row-label">
               <span className="settings-label-title">Risk Limit Breach</span>
               <span className="settings-label-desc">Action on limit breach</span>
-            </div>
+            </Stack>
             <Select defaultValue="warn">
               <SelectTrigger style={{ width: '100%' }}>
                 <SelectValue />
@@ -154,16 +168,18 @@ function SettingsTab() {
                 <SelectItem value="liquidate">Auto liquidate</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </Stack>
         </CardContent>
       </Card>
+      </Grid>
 
-      <Card>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Card>
         <CardHeader>
           <CardTitle>Display</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="settings-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.375rem' }}>
+          <Stack spacing="0.375rem" className="settings-row" style={{ alignItems: 'flex-start' }}>
             <Label>Default Currency</Label>
             <Select defaultValue="usd">
               <SelectTrigger style={{ width: '100%' }}>
@@ -175,8 +191,12 @@ function SettingsTab() {
                 <SelectItem value="gbp">GBP</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          <div className="settings-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.375rem', marginTop: '0.5rem' }}>
+          </Stack>
+          <Stack
+            spacing="0.375rem"
+            className="settings-row"
+            style={{ alignItems: 'flex-start', marginTop: '0.5rem' }}
+          >
             <Label>Date Format</Label>
             <Select defaultValue="iso">
               <SelectTrigger style={{ width: '100%' }}>
@@ -188,11 +208,13 @@ function SettingsTab() {
                 <SelectItem value="eu">EU (DD/MM/YYYY)</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </Stack>
         </CardContent>
       </Card>
+      </Grid>
 
-      <Card>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Card>
         <CardHeader>
           <CardTitle>About Signal FX</CardTitle>
         </CardHeader>
@@ -201,29 +223,30 @@ function SettingsTab() {
             Built with <strong>Signal</strong> component library — a token-driven design system
             with light/dark themes and high/super-high density modes.
           </Alert>
-          <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-            <div className="position-row">
+          <Stack spacing="0.25rem" style={{ marginTop: '0.75rem' }}>
+            <Box className="position-row">
               <span className="position-row-key">Version</span>
               <span className="position-row-val">0.1.0</span>
-            </div>
-            <div className="position-row">
+            </Box>
+            <Box className="position-row">
               <span className="position-row-key">Signal</span>
               <span className="position-row-val">0.1.0</span>
-            </div>
-            <div className="position-row">
+            </Box>
+            <Box className="position-row">
               <span className="position-row-key">React</span>
               <span className="position-row-val">18</span>
-            </div>
-          </div>
+            </Box>
+          </Stack>
         </CardContent>
       </Card>
-    </div>
+      </Grid>
+    </Grid>
   )
 }
 
 export function TradingWorkspace() {
   return (
-    <div className="trading-workspace">
+    <Box className="trading-workspace">
       <Tabs defaultValue="dashboard" className="trading-content">
         <TabsList>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
@@ -234,16 +257,20 @@ export function TradingWorkspace() {
 
         {/* Dashboard */}
         <TabsContent value="dashboard">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div className="trading-dashboard-grid">
-              <OrderEntry />
-              <div className="trading-right-panels">
+          <Stack spacing={1.5}>
+            <Grid container spacing={1.5} className="trading-dashboard-grid">
+              <Grid size={{ xs: 12, md: 2 }}>
+                <OrderEntry />
+              </Grid>
+              <Grid size={{ xs: 12, md: 10 }}>
+                <Stack spacing={1.5} className="trading-right-panels">
                 <PriceChart />
                 <PositionCards />
-              </div>
-            </div>
+                </Stack>
+              </Grid>
+            </Grid>
             <TradingBlotter />
-          </div>
+          </Stack>
         </TabsContent>
 
         {/* Blotter */}
@@ -261,6 +288,6 @@ export function TradingWorkspace() {
           <SettingsTab />
         </TabsContent>
       </Tabs>
-    </div>
+    </Box>
   )
 }

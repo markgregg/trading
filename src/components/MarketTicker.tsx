@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Badge } from 'signal'
+import { Badge, Box, Stack } from 'signal'
 
 interface TickerItem {
   pair: string
@@ -43,16 +43,22 @@ export function MarketTicker() {
   }, [])
 
   return (
-    <div className="trading-ticker" role="marquee" aria-label="Live FX rates">
+    <Box component="section" className="trading-ticker" role="marquee" aria-label="Live FX rates">
       {items.map((item) => (
-        <div key={item.pair} className="trading-ticker-item">
+        <Stack
+          key={item.pair}
+          direction="row"
+          alignItems="center"
+          spacing="0.625rem"
+          className="trading-ticker-item"
+        >
           <span className="trading-ticker-item-pair">{item.pair}</span>
           <span className="trading-ticker-item-price">{item.price}</span>
           <Badge variant={item.positive ? 'success' : 'destructive'}>
             {item.change}
           </Badge>
-        </div>
+        </Stack>
       ))}
-    </div>
+    </Box>
   )
 }
